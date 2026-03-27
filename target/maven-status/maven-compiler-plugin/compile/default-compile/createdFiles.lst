@@ -1,0 +1,3 @@
+com\arremateai\gateway\security\JwtService.class
+com\arremateai\gateway\GatewayApplication.class
+com\arremateai\gateway\filter\JwtValidacaoFilter.class
