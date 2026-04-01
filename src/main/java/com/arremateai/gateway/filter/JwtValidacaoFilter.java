@@ -32,9 +32,10 @@ public class JwtValidacaoFilter implements GlobalFilter, Ordered {
     /**
      * Caminhos públicos que não precisam de autenticação.
      */
+    private static final int MAX_TOKEN_LENGTH = 4096;
+
     private static final List<String> PUBLIC_PATH_PREFIXES = List.of(
-            "/uploads/",
-            "/actuator/"
+            "/uploads/"
     );
 
     private static final List<String> PUBLIC_EXACT_PATHS = List.of(
@@ -75,6 +76,10 @@ public class JwtValidacaoFilter implements GlobalFilter, Ordered {
         }
 
         String token = authHeader.substring(7);
+
+        if (token.length() > MAX_TOKEN_LENGTH) {
+            return responderNaoAutorizado(exchange.getResponse(), "Token inválido");
+        }
 
         try {
             if (!jwtService.isTokenValid(token)) {
@@ -148,7 +153,8 @@ public class JwtValidacaoFilter implements GlobalFilter, Ordered {
     private Mono<Void> responderNaoAutorizado(ServerHttpResponse response, String mensagem) {
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        String body = String.format("{\"error\":\"Não autorizado\",\"message\":\"%s\"}", mensagem);
+        String escapedMsg = mensagem.replace("\\", "\\\\").replace("\"", "\\\"");
+        String body = "{\"error\":\"Não autorizado\",\"message\":\"" + escapedMsg + "\"}";
         DataBuffer buffer = response.bufferFactory()
                 .wrap(body.getBytes(StandardCharsets.UTF_8));
         return response.writeWith(Flux.just(buffer));
