@@ -125,6 +125,13 @@ public class JwtValidacaoFilter implements GlobalFilter, Ordered {
         if (HttpMethod.GET.equals(method)) {
             if ((path.startsWith("/api/imoveis/") || path.equals("/api/imoveis"))
                     && !path.equals("/api/imoveis/meus")) {
+                // /{id}/estatisticas é protegido (requer autenticação do vendedor)
+                if (path.length() > "/api/imoveis/".length()) {
+                    String subPath = path.substring("/api/imoveis/".length());
+                    if (subPath.contains("/estatisticas")) {
+                        return false;
+                    }
+                }
                 return true;
             }
             if (path.startsWith("/api/produtos/") || path.equals("/api/produtos")) {

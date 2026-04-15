@@ -71,6 +71,13 @@ spring:
           predicates:
             - Path=/api/perfil/**, /api/configuracoes/**, /api/favoritos/**
 
+        # ===== ORCHESTRATOR SERVICE (BFF) =====
+        - id: orchestrator-service
+          uri: http://localhost:8087
+          predicates:
+            - Path=/api/orchestrator/**
+          order: 1
+
         # ===== NOTIFICATION SERVICE =====
         - id: notification-service
           uri: http://localhost:8086
