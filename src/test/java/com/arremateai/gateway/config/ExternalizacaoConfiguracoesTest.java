@@ -164,15 +164,15 @@ class ExternalizacaoConfiguracoesTest {
     // ==================== CONSISTÊNCIA ENTRE ARQUIVOS ====================
 
     @Test
-    @DisplayName("Deve ter 9 rotas configuradas no gateway")
-    void deveTerNoveRotasConfiguradas() {
+    @DisplayName("Deve ter 10 rotas configuradas no gateway")
+    void deveTerDezRotasConfiguradas() {
         long quantidadeRotas = conteudoApplicationYml.lines()
                 .filter(linha -> linha.stripLeading().startsWith("- id:"))
                 .count();
 
         assertThat(quantidadeRotas)
-                .as("Gateway deve ter 9 rotas configuradas")
-                .isEqualTo(9);
+                .as("Gateway deve ter 10 rotas configuradas")
+                .isEqualTo(10);
     }
 
     @Test
