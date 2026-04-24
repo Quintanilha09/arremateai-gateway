@@ -1,6 +1,7 @@
 package com.arremateai.gateway.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -77,7 +78,7 @@ public class GlobalErrorWebExceptionHandler implements ErrorWebExceptionHandler 
             log.error("Falha ao serializar ProblemDetail no gateway", falhaSerializacao);
             byte[] fallback = ("{\"type\":\"" + TYPE_PREFIX + "internal\",\"title\":\"Erro interno\","
                     + "\"status\":500,\"detail\":\"" + DETALHE_INTERNO + "\",\"instance\":\""
-                    + path + "\"}").getBytes();
+                    + path + "\"}").getBytes(StandardCharsets.UTF_8);
             buffer = bufferFactory.wrap(fallback);
         }
         return exchange.getResponse().writeWith(Mono.just(buffer));
