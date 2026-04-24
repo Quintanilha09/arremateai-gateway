@@ -1,5 +1,7 @@
 # 🚪 ArremateAI - API Gateway
 
+![CI](https://github.com/Quintanilha09/arremateai-gateway/actions/workflows/ci.yml/badge.svg)
+
 Gateway centralizado para gerenciamento de rotas, autenticação, rate limiting e circuit breaker da arquitetura de microsserviços ArremateAI.
 
 ## 📋 Descrição
