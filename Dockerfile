@@ -8,6 +8,11 @@ RUN mvn clean package -DskipTests -B
 
 # Stage 2 - Runtime
 FROM eclipse-temurin:17-jre-alpine
+LABEL org.opencontainers.image.title="arremateai-gateway"
+LABEL org.opencontainers.image.description="API Gateway do ArremateAI - roteamento, JWT e propagação de headers"
+LABEL org.opencontainers.image.vendor="ArremateAI"
+LABEL org.opencontainers.image.source="https://github.com/Quintanilha09/arremateai-gateway"
+LABEL org.opencontainers.image.licenses="MIT"
 RUN apk add --no-cache curl
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup -u 1001
 WORKDIR /app
