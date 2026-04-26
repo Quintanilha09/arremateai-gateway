@@ -17,7 +17,6 @@ env:
 permissions:
   contents: read
   packages: write
-  security-events: write
 
 jobs:
   publish:
@@ -74,13 +73,6 @@ jobs:
           exit-code: '1'
           severity: CRITICAL
           ignore-unfixed: true
-
-      - name: Upload Trivy SARIF report
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: trivy-results.sarif
-          category: trivy
 
       - name: Upload Trivy results as artifact
         if: always()
