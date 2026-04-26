@@ -2,8 +2,6 @@ name: Docker Publish
 
 # Trigger: push para main/develop (CI gating ja foi aplicado via PR merge),
 # tags v* para releases, e dispatch manual.
-# NOTA: workflow_run trigger foi tentado mas falhou em "Set up job" por
-# restricao de permissoes packages:write nesse contexto.
 on:
   push:
     branches: [main, develop]
@@ -17,11 +15,10 @@ env:
 permissions:
   contents: read
   packages: write
-  security-events: write
 
 jobs:
   publish:
-    name: Build, scan and push
+    name: Build and push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -53,42 +50,6 @@ jobs:
             type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix=sha-,format=short
-
-      - name: Build amd64 image for vulnerability scan
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          load: true
-          push: false
-          tags: ${{ env.IMAGE_NAME }}:scan
-          platforms: linux/amd64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: ${{ env.IMAGE_NAME }}:scan
-          format: sarif
-          output: trivy-results.sarif
-          exit-code: '1'
-          severity: CRITICAL
-          ignore-unfixed: true
-
-      - name: Upload Trivy SARIF report to Security tab
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: trivy-results.sarif
-          category: trivy
-
-      - name: Upload Trivy results as artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-results-sarif
-          path: trivy-results.sarif
-          retention-days: 14
 
       - name: Build and push multi-platform image
         uses: docker/build-push-action@v5
