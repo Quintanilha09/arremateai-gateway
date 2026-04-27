@@ -1,5 +1,5 @@
-# Stage 1 - Build
-FROM maven:3.9-eclipse-temurin-17-alpine AS build
+# Stage 1 - Build (Debian-based, suporta linux/amd64 + linux/arm64)
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
