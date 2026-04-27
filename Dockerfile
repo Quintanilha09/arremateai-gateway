@@ -9,15 +9,16 @@ COPY checkstyle.xml checkstyle-suppressions.xml spotbugs-exclude.xml ./
 COPY src/ src/
 RUN mvn clean package -DskipTests -B
 
-# Stage 2 - Runtime
-FROM eclipse-temurin:17-jre-alpine
+# Stage 2 - Runtime (Debian-based, suporta linux/amd64 + linux/arm64)
+# alpine variant do eclipse-temurin nao publica manifest arm64.
+FROM eclipse-temurin:17-jre-jammy
 LABEL org.opencontainers.image.title="arremateai-gateway"
 LABEL org.opencontainers.image.description="API Gateway do ArremateAI - roteamento, JWT e propagação de headers"
 LABEL org.opencontainers.image.vendor="ArremateAI"
 LABEL org.opencontainers.image.source="https://github.com/Quintanilha09/arremateai-gateway"
 LABEL org.opencontainers.image.licenses="MIT"
-RUN apk add --no-cache curl
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup -u 1001
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
+RUN groupadd -r appgroup && useradd -r -g appgroup -u 1001 appuser
 WORKDIR /app
 COPY --from=build /app/target/arremateai-gateway-0.0.1-SNAPSHOT.jar app.jar
 RUN chown -R appuser:appgroup /app
