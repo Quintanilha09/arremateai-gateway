@@ -67,6 +67,18 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # Debug step: imprime CVEs CRITICAL no log antes do gate (sem falhar)
+      # para identificar exatamente qual vulnerabilidade esta bloqueando o push.
+      # Remover apos diagnostico (issue QUINT-205).
+      - name: Trivy CRITICAL summary (debug)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ env.SCAN_TAG }}
+          format: table
+          severity: CRITICAL
+          ignore-unfixed: true
+          exit-code: '0'
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
