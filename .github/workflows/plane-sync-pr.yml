@@ -1,0 +1,17 @@
+name: Plane Sync
+
+# Sincroniza eventos de Pull Request com a história correspondente no Plane.
+# Convenção de branch: E{epic}H{story} (ex: EALMH1, E5H2).
+# A história no Plane deve iniciar com "E{epic}-H{story}" (ex: "EALM-H1: ...").
+#
+# Reusa o workflow central em arremateai-docs para manter a lógica DRY.
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  sync:
+    uses: Quintanilha09/arremateai-docs/.github/workflows/plane-sync-pr.yml@main
+    secrets:
+      PLANE_API_TOKEN: ${{ secrets.PLANE_API_TOKEN }}
